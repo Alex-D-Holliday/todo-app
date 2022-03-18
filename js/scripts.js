@@ -118,7 +118,6 @@ Todos.prototype.render = function render(parent) {
       editInput.focus();
 
       var applyEdit = function (event) {
-        console.log(event)
         if (event.keyCode === 13) {
           todo.name = editInput.value.trim();
           localStorage.setItem('data', JSON.stringify(newToDo.todo));
@@ -153,7 +152,6 @@ Todos.prototype.render = function render(parent) {
 
     var toggle = function (ref) {
       var target = ref.target;
-      console.log(ref);
       newToDo.todo = newToDo.todo.map(function (todo) {
         if (target.dataset.key === todo.id) {
           todo.completed = !todo.completed;
