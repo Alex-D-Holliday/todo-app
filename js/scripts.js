@@ -11,7 +11,6 @@ var sort = document.querySelector('.sort');
 
 var selectAll = document.querySelector('.toggle-all');
 var selectLabel = document.querySelector('.toggle-label');
-var switchIt = false;
 
 var funcCall = 0;
 
@@ -170,6 +169,11 @@ Todos.prototype.render = function render(parent) {
       return todo.completed;
     }).length;
 
+    if (items < newToDo.todo.length) {
+      selectLabel.classList.remove('checked');
+    } else {
+      selectLabel.classList.add('checked');
+    }
     displayBlock(!(items > 0), clearCompleted);
   })
 
@@ -222,7 +226,11 @@ var completedFunc = function () {
 }
 
 var selectAllFunc = function () {
-  if (switchIt === false) {
+  var completedTodos = newToDo.todo.filter(function (todo) {
+    return todo.completed === true;
+  });
+
+  if (completedTodos.length < newToDo.todo.length || !completedTodos) {
     newToDo.todo = newToDo.todo.map(function (todo) {
       todo.completed = true;
       return todo;
@@ -234,7 +242,6 @@ var selectAllFunc = function () {
     });
   }
 
-  switchIt = !switchIt;
   localStorage.setItem('data', JSON.stringify(newToDo.todo))
   newToDo.render(toDoList);
 }
