@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <title>ToDoApp</title>
     <link rel="stylesheet" href="css/stylesheet.css">
-    <script src="js/scripts.js" defer></script>
 </head>
 <body>
 <section class="todoapp">
     <header class="header">
         <h1>todos</h1>
-        <input class="add-todo" type="text" minlength="3" maxlength="200" placeholder="What needs to be done?" autofocus>
+        <input class="add-todo" type="text" maxlength="200" placeholder="What needs to be done?" autofocus>
     </header>
     <section class="main">
         <input id="toggle-all" class="toggle-all" type="checkbox">
@@ -20,13 +19,20 @@
     <footer class="footer">
         <span class="todo-count">0 items left</span>
         <ul class="filters">
-            <li><button class="all selected">All</button></li>
-            <li><button class="active">Active</button></li>
-            <li><button class="done">Completed</button></li>
-            <li><button class="sort">Sort</button></li>
+            <li><a href="#/" class="selected">All</a></li>
+            <li><a href="#/active">Active</a></li>
+            <li><a href="#/completed">Completed</a></li>
+            <li><button class="sort asc">Asc</button></li>
+            <li><button class="sort desc">Desc</button></li>
         </ul>
         <button class="clear-completed">Clear completed</button>
     </footer>
 </section>
+<script src="js/store.js"></script>
+<script src="js/templates.js"></script>
+<script src="js/model.js"></script>
+<script src="js/view.js"></script>
+<script src="js/controller.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>
