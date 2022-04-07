@@ -12,18 +12,7 @@ AppHelper.prototype = {
     return true;
   },
 
-  filterSelect: function (filter) {
-    var filterClass = filter.innerHTML.toLowerCase();
-    if (filterClass === 'asc' || filterClass === 'desc') {
-      return;
-    }
-
-    var state = document.querySelector('.' + filterClass);
-
-    this.activeFilter.classList.remove('selected');
-    state.classList.add('selected');
-    this.activeFilter = state;
-  },
+  
 
   applyFilter: function (filterNode, todoList) {
     var filter = filterNode.innerHTML.toLowerCase();

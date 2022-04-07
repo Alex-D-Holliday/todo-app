@@ -2,6 +2,7 @@ var TodoApp = function (storage) {
   this.storage = new AppStore(storage);
   this.newTodo = new AppTemp();
   this.helpers = new AppHelper();
+  this.extensions = new AppExtensions();
 
   this.ENTER_KEY = 13;
 
@@ -11,7 +12,6 @@ var TodoApp = function (storage) {
   this.footer = document.querySelector('.footer');
   this.addToDo = document.querySelector('.add-todo');
   this.selectAll = document.querySelector('.toggle-all');
-  this.filters = document.querySelector('.filters');
   this.label = document.querySelector('.toggle-label');
 
   this.eventListeners();
@@ -31,11 +31,15 @@ TodoApp.prototype = {
     var element = event.target;
     var text = element.value.trim();
     var inputRule = this.helpers.inputRules(text, element);
-    if (event.keyCode === this.ENTER_KEY && inputRule) {
+    if (text && event.keyCode === this.ENTER_KEY && inputRule) {
       this.createTodo(text);
       element.value = '';
     }
     return text;
+  },
+  
+  edit: function() {
+      
   },
 
   removeTodo: function (todoId) {
@@ -97,11 +101,6 @@ TodoApp.prototype = {
     }.bind(this));
   },
 
-  renderByFilter: function (event) {
-    var filter = event.target;
-    this.helpers.filterSelect(filter);
-    this.renderList(this.helpers.activeFilter);
-  },
 
   showControls: function () {
     this.storage.getAll(function (items) {
@@ -132,8 +131,8 @@ TodoApp.prototype = {
 
     this.clearCompleted.addEventListener('click', this.deleteCompleted.bind(this));
 
-    this.filters.addEventListener('click', this.renderByFilter.bind(this));
-
+    //document.addEventListener('change', this.renderList.bind(this.helpers.activeFilter));
+    //window.addEventListener('storage', this.renderList.bind(this.helpers.activeFilter));
 
   }
 
