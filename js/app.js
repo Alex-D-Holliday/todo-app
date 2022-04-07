@@ -19,23 +19,6 @@ var TodoApp = function (storage) {
 }
 
 TodoApp.prototype = {
-  loadExtensions: function (src, callback, list) {
-    var script = document.createElement('script');
-    var ifScriptExists = document.getElementById('external');
-    console.log(ifScriptExists);
-    if (ifScriptExists === null && list.length > 0) {
-      script.setAttribute('id', 'external');
-      script.src = src;
-      script.onload = callback;
-      document.body.insertBefore(script, document.body.childNodes[2]);
-    } else if (ifScriptExists !== null && list.length > 0) {
-      callback();
-    } else {
-      ifScriptExists.remove();
-      callback();
-    }
-  },
-
   createTodo: function (text) {
     var todo = this.newTodo.todoData(text);
 
@@ -130,12 +113,8 @@ TodoApp.prototype = {
   renderList: function (filter) {
     this.toDoList.innerHTML = '';
     this.storage.getAll(function (items) {
-
-
-      this.loadExtensions('/js/extensions.js', function () {
+      this.helpers.loadExtensions('/js/extensions.js', function () {
       }, items);
-
-
       this.showControls();
       items = this.helpers.applyFilter(filter, items);
       this.newTodo.renderTodo(items, this.toDoList);

@@ -70,6 +70,22 @@ AppHelper.prototype = {
     clearCompletedButton.style.display = items.filter(function (item) {
       return item.completed;
     }).length ? 'block' : 'none';
+  },
+
+  loadExtensions: function (src, callback, list) {
+    var script = document.createElement('script');
+    var ifScriptExists = document.getElementById('external');
+    if (ifScriptExists === null && list.length > 0) {
+      script.setAttribute('id', 'external');
+      script.src = src;
+      script.onload = callback;
+      document.body.insertBefore(script, document.body.childNodes[2]);
+    } else if (ifScriptExists !== null && list.length > 0) {
+      callback();
+    } else if (ifScriptExists !== null){
+      ifScriptExists.remove();
+      callback();
+    }
   }
 }
 
