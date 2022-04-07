@@ -19,6 +19,7 @@ button {
   font-weight: inherit;
   color: inherit;
   appearance: none;
+  cursor: pointer;
 }
 
 body {
@@ -185,7 +186,7 @@ body {
   transition: color 0.4s;
 }
 
-.todo-list li.completed span {
+.todo-list li.complete span {
   color: #d9d9d9;
   text-decoration: line-through;
 }

@@ -49,10 +49,5 @@ AppStore.prototype = {
 
     localStorage[this.key] = JSON.stringify(items);
     callback.call(this, id);
-  },
-
-  clear: function (callback) {
-    localStorage[this.key] = JSON.stringify([]);
-    callback.call(this);
   }
 }

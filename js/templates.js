@@ -1,50 +1,47 @@
 var AppTemp = function () {
-  this.defaultTemplate
-    = '<li data-id="idTemp" class="isCompleted">'
-    + '<div class="view">'
-    + '<input class="toggle" type="checkbox" isChecked>'
-    + '<label>titleTemp</label>'
-    + '<button class="destroy"></button>'
-    + '</div>'
-    + '</li>';
+  
 };
 
 AppTemp.prototype = {
-  renderTodoItem: function (data) {
-    var i, l;
-    var view = '';
+  todoData: function (text) {
+    return {
+      name: text,
+      completed: false
+    };
+  },
+  
+  renderTodo: function (todos, parent) {
+    todos.forEach(function (todo) {
+      var li = document.createElement('li');
+      li.setAttribute('data-id', todo.id);
 
-    for (i = 0, l = data.length; i < l; i++) {
-      var template = this.defaultTemplate;
-      var completed = '';
-      var checked = '';
+      var text = document.createElement('span');
+      text.textContent = todo.name;
 
-      if (data[i].completed) {
-        completed = 'completed';
-        checked = 'checked';
+      var input = document.createElement('input');
+      input.setAttribute('type', 'checkbox');
+      input.checked = todo.completed;
+      input.setAttribute('data-id', todo.id);
+      input.classList.add('toggle');
+      if (input.checked) {
+        li.classList.add('complete');
       }
 
-      template = template.replace('idTemp', data[i].id);
-      template = template.replace('titleTemp', data[i].title);
-      template = template.replace('isCompleted', completed);
-      template = template.replace('isChecked', checked);
+      var deleteBtn = document.createElement('button');
+      deleteBtn.classList.add('delete-btn');
+      deleteBtn.setAttribute('data-id', todo.id);
 
-      view = view + template;
-    }
-
-    return view;
+      li.append(input, text, deleteBtn);
+      parent.append(li);
+    });
   },
 
-  itemCounter: function (activeTodos) {
+  itemCounter: function (items) {
+    var activeTodos = items.filter(function (item) {
+      return !item.completed;
+    }).length;
     var plural = activeTodos === 1 ? '' : 's';
 
-    return '<strong>' + activeTodos + '</strong> item' + plural + ' left';
-  },
-
-  clearCompletedButton: function (completedTodos) {
-    if (completedTodos > 0) {
-      return 'Clear completed';
-    }
-    return '';
+    return activeTodos + ' item' + plural + ' left';
   }
 };
