@@ -30,12 +30,51 @@ TodoApp.prototype = {
   addTodo: function (event) {
     var element = event.target;
     var text = element.value.trim();
+
     var inputRule = this.helpers.inputRules(text, element);
-    if (event.keyCode === this.ENTER_KEY && inputRule) {
+
+    if (text && event.keyCode === this.ENTER_KEY && inputRule) {
       this.createTodo(text);
       element.value = '';
     }
     return text;
+  },
+
+  editStart: function (event) {
+    var text = event.target;
+    if (text.tagName !== 'SPAN') {
+      return;
+    }
+    var li = text.parentNode;
+    this.newTodo.editTodo(li, text);
+  },
+
+  editDone: function (event) {
+    var element = event.target;
+    var text = element.value.trim();
+    var inputRule = this.helpers.inputRules(text, element);
+    if (text && event.keyCode === this.ENTER_KEY && inputRule) {
+      this.helpers.editEnd(element.parentNode, text);
+      element.blur();
+      this.renderList(this.helpers.activeFilter);
+    }
+  },
+
+  editLeave: function (event) {
+    var element = event.target;
+    var id = this.helpers.getItemById(element);
+    var text = element.value.trim();
+    var inputRule = this.helpers.inputRules(text, element);
+    if (text  && inputRule) {
+      this.storage.get(id, function (item) {
+        item.name = text;
+        this.storage.save(item, function (item) {
+          this.helpers.getItemDataById(item.id);
+        }.bind(this));
+      }.bind(this));
+      this.renderList(this.helpers.activeFilter);
+    }
+    element.focus();
   },
 
   removeTodo: function (todoId) {
@@ -103,6 +142,19 @@ TodoApp.prototype = {
     this.renderList(this.helpers.activeFilter);
   },
 
+  renderBySort: function (event) {
+    if (event.target.classList.value !== 'sort') {
+      return;
+    }
+    var sort = event.target;
+    this.storage.getAll(function (items) {
+      items = this.helpers.sortList(sort, items);
+      this.storage.updateAll(items, function () {
+        this.renderList(this.helpers.activeFilter);
+      }.bind(this));
+    }.bind(this));
+  },
+
   showControls: function () {
     this.storage.getAll(function (items) {
       this.helpers.showBarAndToggleAll(items, this.label, this.selectAll, this.footer);
@@ -113,8 +165,6 @@ TodoApp.prototype = {
   renderList: function (filter) {
     this.toDoList.innerHTML = '';
     this.storage.getAll(function (items) {
-      this.helpers.loadExtensions('/js/extensions.js', function () {
-      }, items);
       this.showControls();
       items = this.helpers.applyFilter(filter, items);
       this.newTodo.renderTodo(items, this.toDoList);
@@ -125,16 +175,18 @@ TodoApp.prototype = {
   eventListeners: function () {
     this.addToDo.addEventListener('keyup', this.addTodo.bind(this));
 
-    this.toDoList.addEventListener('click', this.deleteTodo.bind(this));
-    this.toDoList.addEventListener('click', this.toggle.bind(this));
-
     this.selectAll.addEventListener('click', this.toggleAll.bind(this));
 
     this.clearCompleted.addEventListener('click', this.deleteCompleted.bind(this));
 
     this.filters.addEventListener('click', this.renderByFilter.bind(this));
+    this.filters.addEventListener('click', this.renderBySort.bind(this));
 
+    this.toDoList.addEventListener('click', this.deleteTodo.bind(this));
+    this.toDoList.addEventListener('click', this.toggle.bind(this));
 
+    this.toDoList.addEventListener('dblclick', this.editStart.bind(this));
+    this.toDoList.addEventListener('keyup', this.editDone.bind(this));
+    this.toDoList.addEventListener('focusout', this.editLeave.bind(this));
   }
-
 }

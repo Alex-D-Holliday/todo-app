@@ -1,5 +1,5 @@
 var AppTemp = function () {
-  
+
 };
 
 AppTemp.prototype = {
@@ -9,7 +9,21 @@ AppTemp.prototype = {
       completed: false
     };
   },
-  
+
+  editTodo: function (li, text) {
+    var editInput = document.createElement('input');
+    editInput.classList.add('edit');
+    editInput.setAttribute('maxlength', '200');
+
+    li.replaceChild(editInput, text);
+    li.lastChild.style.display = 'none';
+    li.className += 'editing';
+
+    editInput.value = text.textContent;
+    editInput.focus();
+    return editInput;
+  },
+
   renderTodo: function (todos, parent) {
     todos.forEach(function (todo) {
       var li = document.createElement('li');

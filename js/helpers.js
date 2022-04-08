@@ -8,7 +8,7 @@ AppHelper.prototype = {
       form.style.background = 'rgba(255,0,0,0.67)';
       return false;
     }
-    form.style.background = 'rgba(0, 0, 0, 0.003)';
+    form.style.background = null;
     return true;
   },
 
@@ -42,6 +42,30 @@ AppHelper.prototype = {
     }
   },
 
+  sortList: function (sortNode, todoList) {
+    var sort = sortNode.innerHTML.toLowerCase();
+
+    switch (sort) {
+      case 'asc':
+        return todoList.sort(function (firstEl, secondEl) {
+          return firstEl === secondEl
+            ? firstEl.id - secondEl.id
+            : firstEl.name.localeCompare(secondEl.name)
+        });
+      case 'desc':
+        return todoList.sort(function (firstEl, secondEl) {
+          return firstEl === secondEl
+            ? secondEl.id - firstEl.id
+            : secondEl.name.localeCompare(firstEl.name)
+        });
+    }
+  },
+
+  editEnd: function (li, text) {
+    li.className = li.className.replace('editing', '');
+    li.querySelector('.edit').innerHTML = text;
+  },
+
   getItemById: function (element) {
     var li = element.parentNode;
     return parseInt(li.dataset.id, 10);
@@ -49,10 +73,6 @@ AppHelper.prototype = {
 
   getItemDataById: function (id) {
     return document.querySelector('[data-id="' + id + '"]');
-  },
-
-  sortList: function (list) {
-
   },
 
   showBarAndToggleAll: function (items, label, toggleAllButton, footer) {
@@ -70,22 +90,6 @@ AppHelper.prototype = {
     clearCompletedButton.style.display = items.filter(function (item) {
       return item.completed;
     }).length ? 'block' : 'none';
-  },
-
-  loadExtensions: function (src, callback, list) {
-    var script = document.createElement('script');
-    var ifScriptExists = document.getElementById('external');
-    if (ifScriptExists === null && list.length > 0) {
-      script.setAttribute('id', 'external');
-      script.src = src;
-      script.onload = callback;
-      document.body.insertBefore(script, document.body.childNodes[2]);
-    } else if (ifScriptExists !== null && list.length > 0) {
-      callback();
-    } else if (ifScriptExists !== null){
-      ifScriptExists.remove();
-      callback();
-    }
   }
 }
 

@@ -39,6 +39,11 @@ AppStore.prototype = {
   getAll: function (callback) {
     callback.call(this, JSON.parse(localStorage[this.key]));
   },
+  
+  updateAll: function (list, callback) {
+    localStorage[this.key] = JSON.stringify(list);    
+    callback.call(this, JSON.parse(localStorage[this.key]));
+  },
 
   remove: function (id, callback) {
     var items = JSON.parse(localStorage[this.key]);
